@@ -1,3 +1,4 @@
+
 package com.hospital.hospitalmanagement.config;
 
 import org.springframework.context.annotation.Bean;
@@ -14,7 +15,12 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOriginPatterns("http://localhost:*", "http://127.0.0.1:*", "null")
+                        .allowedOriginPatterns(
+                                "http://localhost:*",
+                                "http://127.0.0.1:*",
+                                "https://hariharihari16.github.io",
+                                "https://*.onrender.com"
+                        )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
