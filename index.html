@@ -3,674 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ApexCare - Hospital Management System Admin Dashboard</title>
-    <meta name="description" content="Modern single-page Hospital Management System Admin Dashboard.">
-    <!-- Google Fonts -->
+    <title>MediCore - Hospital Management System</title>
+    <meta name="description" content="Modern Enterprise Hospital Management System with Appointment Scheduling, Billing, and Electronic Medical Records.">
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome 6 Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <style>
-        /* ==========================================================================
-           CSS DESIGN SYSTEM & THEME VARIABLES
-           ========================================================================== */
-        :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --primary-light: #eff6ff;
-            --primary-border: #bfdbfe;
-            
-            --slate-900: #0f172a;
-            --slate-800: #1e293b;
-            --slate-700: #334155;
-            --slate-600: #475569;
-            --slate-500: #64748b;
-            --slate-400: #94a3b8;
-            --slate-300: #cbd5e1;
-            --slate-200: #e2e8f0;
-            --slate-100: #f1f5f9;
-            --slate-50: #f8fafc;
-
-            --bg-main: #f4f7fe;
-            --card-bg: #ffffff;
-            --card-border: #e2e8f0;
-
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --text-light: #94a3b8;
-
-            /* Status Colors */
-            --success: #10b981;
-            --success-bg: #ecfdf5;
-            --warning: #f59e0b;
-            --warning-bg: #fffbe5;
-            --danger: #ef4444;
-            --danger-bg: #fef2f2;
-            --indigo: #6366f1;
-            --indigo-bg: #eef2ff;
-
-            --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 24px;
-            --radius-full: 9999px;
-
-            --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
-            --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.06), 0 2px 4px -1px rgba(15, 23, 42, 0.04);
-            --shadow-lg: 0 12px 28px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04);
-            --shadow-xl: 0 20px 35px -5px rgba(15, 23, 42, 0.15);
-
-            --transition-fast: 0.15s ease;
-            --transition-normal: 0.25s ease;
-            --transition-slow: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-
-            --sidebar-width: 270px;
-            --top-nav-height: 75px;
-        }
-
-        body.dark-theme {
-            --bg-main: #0b1329;
-            --card-bg: #131e3a;
-            --card-border: #1e2d54;
-
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --text-light: #64748b;
-
-            --slate-100: #1e293b;
-            --slate-50: #0f172a;
-
-            --shadow-md: 0 4px 14px 0 rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 12px 28px 0 rgba(0, 0, 0, 0.4);
-        }
-
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: var(--font-family);
-            background-color: var(--bg-main);
-            color: var(--text-main);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
-
-        a { color: var(--primary); text-decoration: none; }
-        button, input, select { font-family: inherit; font-size: inherit; }
-
-        .app-container { display: flex; min-height: 100vh; }
-
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--card-bg);
-            border-right: 1px solid var(--card-border);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0; bottom: 0; left: 0;
-            z-index: 100;
-            transition: transform var(--transition-slow);
-        }
-
-        .sidebar-header {
-            height: var(--top-nav-height);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 1.5rem;
-            border-bottom: 1px solid var(--card-border);
-        }
-
-        .brand-logo { display: flex; align-items: center; gap: 0.75rem; }
-
-        .brand-icon-box {
-            width: 40px; height: 40px;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: #ffffff;
-            border-radius: var(--radius-md);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
-        }
-
-        .logo-text h2 {
-            font-size: 1.2rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-            color: var(--text-main);
-            line-height: 1.1;
-        }
-
-        .badge-sub {
-            font-size: 0.68rem;
-            font-weight: 700;
-            color: var(--primary);
-            background: var(--primary-light);
-            padding: 2px 6px;
-            border-radius: var(--radius-full);
-        }
-
-        .close-sidebar-btn {
-            display: none; background: transparent; border: none;
-            font-size: 1.25rem; color: var(--text-muted); cursor: pointer;
-        }
-
-        .sidebar-nav { flex: 1; overflow-y: auto; padding: 1.25rem 1rem; }
-
-        .nav-section-title {
-            font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
-            color: var(--text-light); margin: 1.25rem 0.75rem 0.5rem 0.75rem;
-        }
-
-        .nav-list { list-style: none; display: flex; flex-direction: column; gap: 4px; }
-
-        .nav-link {
-            display: flex; align-items: center; gap: 0.85rem;
-            padding: 0.75rem 1rem; border-radius: var(--radius-md);
-            color: var(--text-muted); font-weight: 600; font-size: 0.92rem;
-            transition: all var(--transition-fast);
-        }
-
-        .nav-link:hover { background-color: var(--slate-100); color: var(--primary); transform: translateX(3px); }
-
-        .nav-link.active {
-            background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
-            color: #ffffff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-        }
-
-        .nav-icon { font-size: 1.1rem; width: 20px; text-align: center; }
-
-        .nav-badge {
-            margin-left: auto; font-size: 0.72rem; font-weight: 700;
-            padding: 2px 8px; border-radius: var(--radius-full);
-        }
-
-        .nav-badge.blue { background: #dbeafe; color: #1e40af; }
-        .nav-badge.green { background: #d1fae5; color: #065f46; }
-        .nav-badge.amber { background: #fef3c7; color: #92400e; }
-
-        .sidebar-footer-card {
-            margin: 1rem; padding: 1rem;
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-            border-radius: var(--radius-lg); border: 1px solid var(--primary-border);
-        }
-
-        .emergency-badge { font-size: 0.75rem; font-weight: 700; color: #dc2626; margin-bottom: 4px; }
-        .helpline-num { font-size: 0.78rem; color: var(--text-main); margin-bottom: 8px; }
-
-        .btn-help-modal {
-            width: 100%; background: var(--card-bg); border: 1px solid var(--card-border);
-            padding: 6px 12px; border-radius: var(--radius-sm); font-size: 0.8rem;
-            font-weight: 600; color: var(--text-main); cursor: pointer;
-        }
-
-        .sidebar-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); z-index: 90;
-        }
-
-        .main-wrapper {
-            flex: 1; margin-left: var(--sidebar-width);
-            display: flex; flex-direction: column; min-height: 100vh;
-            width: calc(100% - var(--sidebar-width));
-        }
-
-        .top-nav {
-            height: var(--top-nav-height); background-color: var(--card-bg);
-            border-bottom: 1px solid var(--card-border); display: flex;
-            align-items: center; justify-content: space-between; padding: 0 2rem;
-            position: sticky; top: 0; z-index: 80;
-        }
-
-        .top-nav-left { display: flex; align-items: center; gap: 1rem; }
-        .hamburger-btn { display: none; background: transparent; border: none; font-size: 1.3rem; color: var(--text-main); cursor: pointer; }
-        .page-title { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.2; }
-        .live-clock { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
-
-        .search-box-wrap { position: relative; width: 360px; }
-        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-light); font-size: 0.9rem; }
-        .search-input {
-            width: 100%; padding: 0.65rem 2.8rem 0.65rem 2.4rem;
-            background-color: var(--bg-main); border: 1px solid var(--card-border);
-            border-radius: var(--radius-full); color: var(--text-main); font-size: 0.88rem; outline: none;
-        }
-
-        .top-nav-right { display: flex; align-items: center; gap: 1rem; }
-
-        .icon-btn {
-            width: 40px; height: 40px; border-radius: var(--radius-full);
-            border: 1px solid var(--card-border); background-color: var(--bg-main);
-            color: var(--text-main); display: flex; align-items: center; justify-content: center;
-            cursor: pointer; position: relative;
-        }
-
-        .notification-badge {
-            position: absolute; top: -2px; right: -2px; background-color: var(--danger);
-            color: #ffffff; font-size: 0.68rem; font-weight: 800; width: 18px; height: 18px;
-            border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center;
-        }
-
-        .api-status-tag {
-            font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: var(--radius-full);
-            display: inline-flex; align-items: center; gap: 4px;
-        }
-        .api-status-tag.online { background: #d1fae5; color: #047857; }
-        .api-status-tag.offline { background: #fee2e2; color: #b91c1c; }
-
-        .admin-profile-card {
-            display: flex; align-items: center; gap: 0.75rem; padding: 4px 12px 4px 6px;
-            border-radius: var(--radius-full); border: 1px solid var(--card-border);
-            background-color: var(--card-bg); cursor: pointer;
-        }
-
-        .admin-avatar-icon {
-            width: 36px; height: 36px; border-radius: var(--radius-full);
-            background: linear-gradient(135deg, #2563eb, #3b82f6); color: #ffffff;
-            display: flex; align-items: center; justify-content: center; font-size: 1.1rem; font-weight: 800;
-        }
-
-        .admin-info { display: flex; flex-direction: column; }
-        .admin-name { font-size: 0.85rem; font-weight: 700; line-height: 1.1; }
-        .admin-role { font-size: 0.7rem; color: var(--text-muted); }
-
-        .btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-            padding: 0.65rem 1.25rem; border-radius: var(--radius-md); font-weight: 600;
-            font-size: 0.88rem; cursor: pointer; border: 1px solid transparent;
-        }
-
-        .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%); color: #ffffff; }
-        .btn-outline { background: var(--card-bg); border-color: var(--card-border); color: var(--text-main); }
-        .btn-sm { padding: 0.45rem 0.85rem; font-size: 0.8rem; border-radius: var(--radius-sm); }
-        .btn-xs { padding: 0.3rem 0.65rem; font-size: 0.75rem; border-radius: var(--radius-sm); }
-
-        .content-body { padding: 2rem; flex: 1; }
-        .tab-view { display: none; }
-        .tab-view.active { display: block; }
-
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
-
-        .stat-card {
-            background-color: var(--card-bg); border: 1px solid var(--card-border);
-            border-radius: var(--radius-lg); padding: 1.35rem; box-shadow: var(--shadow-md);
-        }
-
-        .stat-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-        .stat-icon-wrapper { width: 46px; height: 46px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
-        .bg-soft-blue { background: #eff6ff; color: #2563eb; }
-        .bg-soft-indigo { background: #eef2ff; color: #6366f1; }
-        .bg-soft-teal { background: #f0fdfa; color: #0d9488; }
-        .bg-soft-amber { background: #fffbe5; color: #d97706; }
-
-        .stat-trend { font-size: 0.75rem; font-weight: 700; padding: 4px 8px; border-radius: var(--radius-full); }
-        .trend-up { background: var(--success-bg); color: var(--success); }
-
-        .stat-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 600; }
-        .stat-value { font-size: 1.9rem; font-weight: 800; color: var(--text-main); margin: 4px 0 10px 0; }
-
-        .card { background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-md); margin-bottom: 2rem; overflow: hidden; }
-        .card-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--card-border); }
-        .card-title { font-size: 1.05rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem; }
-        .card-subtitle { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; display: block; margin-top: 2px; }
-        .card-body { padding: 1.5rem; }
-        .card-body.p-0 { padding: 0; }
-
-        .dashboard-main-grid { display: grid; grid-template-columns: 7fr 5fr; gap: 1.5rem; }
-        .chart-wrapper { position: relative; height: 260px; width: 100%; }
-
-        .doctor-list { display: flex; flex-direction: column; }
-        .doctor-item { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--card-border); }
-        .doctor-avatar-wrap { position: relative; }
-        .doc-avatar-circle { width: 44px; height: 44px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; }
-        .bg-blue-sub { background: #dbeafe; color: #1e40af; }
-        .doctor-details { flex: 1; }
-        .doc-name { font-size: 0.92rem; font-weight: 700; color: var(--text-main); }
-        .doc-dept { font-size: 0.76rem; color: var(--text-muted); display: block; }
-        .doctor-status-badge { font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: var(--radius-full); display: flex; align-items: center; gap: 5px; }
-        .doctor-status-badge.green { background: var(--success-bg); color: var(--success); }
-
-        .table-responsive { overflow-x: auto; width: 100%; }
-        .data-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; }
-        .data-table th { background-color: var(--bg-main); color: var(--text-muted); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; padding: 0.85rem 1.25rem; border-bottom: 1px solid var(--card-border); }
-        .data-table td { padding: 1rem 1.25rem; border-bottom: 1px solid var(--card-border); vertical-align: middle; }
-
-        .patient-cell { display: flex; align-items: center; gap: 0.75rem; }
-        .avatar-circle-sm { width: 38px; height: 38px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.82rem; color: #ffffff; }
-        .avatar-circle-sm.bg-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
-
-        .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: var(--radius-full); font-size: 0.75rem; font-weight: 700; }
-        .status-completed { background: var(--success-bg); color: var(--success); }
-        .status-scheduled { background: var(--indigo-bg); color: var(--indigo); }
-
-        .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; }
-        .modal-backdrop.show { display: flex; }
-        .modal-dialog { width: 100%; max-width: 580px; background-color: var(--card-bg); border: 1px solid var(--card-border); border-radius: var(--radius-xl); box-shadow: var(--shadow-xl); overflow: hidden; }
-        .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--card-border); }
-        .btn-close-modal { background: none; border: none; font-size: 1.2rem; color: var(--text-muted); cursor: pointer; }
-        .modal-body { padding: 1.5rem; max-height: 75vh; overflow-y: auto; }
-        .modal-footer { display: flex; align-items: center; justify-content: flex-end; gap: 0.75rem; padding: 1rem 1.5rem; border-top: 1px solid var(--card-border); background-color: var(--bg-main); }
-
-        .form-group { display: flex; flex-direction: column; gap: 6px; }
-        .form-group label { font-size: 0.8rem; font-weight: 700; }
-        .form-control, .form-select { padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--card-border); background-color: var(--card-bg); color: var(--text-main); font-size: 0.88rem; outline: none; }
-        .form-row { display: flex; gap: 1rem; }
-        .col-6 { flex: 0 0 calc(50% - 0.5rem); }
-        .col-3 { flex: 0 0 calc(25% - 0.75rem); }
-        .mt-3 { margin-top: 1rem; }
-        .mt-4 { margin-top: 1.5rem; }
-        .p-4 { padding: 1.5rem; }
-
-        .toast-container { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 10px; z-index: 1100; }
-        .toast-msg { background-color: var(--slate-900); color: #ffffff; padding: 0.85rem 1.25rem; border-radius: var(--radius-md); font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 0.75rem; }
-        .toast-msg.success { border-left: 4px solid var(--success); }
-
-        @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .dashboard-main-grid { grid-template-columns: 1fr; } }
-        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .sidebar.mobile-open { transform: translateX(0); } .main-wrapper { margin-left: 0; width: 100%; } .hamburger-btn { display: block; } }
-    </style>
 </head>
-<body class="light-theme">
+<body>
+    <div class="app-layout">
+        <!-- Mobile Sidebar Backdrop Overlay -->
+        <div class="sidebar-overlay" id="sidebar-mobile-overlay"></div>
 
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <div class="app-container">
-        <!-- LEFT SIDEBAR -->
-        <aside class="sidebar" id="sidebar">
+        <!-- Deep Navy Sidebar Navigation -->
+        <aside class="app-sidebar">
             <div class="sidebar-header">
-                <div class="brand-logo">
-                    <div class="brand-icon-box"><i class="fa-solid fa-hospital"></i></div>
-                    <div class="logo-text">
-                        <h2>ApexCare</h2>
-                        <span class="badge-sub">HMS Admin v2.4</span>
+                <div class="brand-wrapper">
+                    <div class="brand-icon">
+                        <i data-lucide="cross"></i>
+                    </div>
+                    <div>
+                        <div class="brand-title">MediCore</div>
+                        <span class="brand-subtitle">Health System</span>
                     </div>
                 </div>
-                <button class="close-sidebar-btn" id="closeSidebarBtn"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <nav class="sidebar-nav">
-                <div class="nav-section-title">MAIN MENU</div>
-                <ul class="nav-list">
-                    <li class="nav-item"><a href="#dashboard" class="nav-link active" data-tab="dashboard"><i class="fa-solid fa-chart-pie nav-icon"></i><span class="nav-label">Dashboard</span></a></li>
-                    <li class="nav-item"><a href="#patients" class="nav-link" data-tab="patients"><i class="fa-solid fa-user-injured nav-icon"></i><span class="nav-label">Patients</span><span class="nav-badge blue" id="patientsBadge">1,250</span></a></li>
-                    <li class="nav-item"><a href="#doctors" class="nav-link" data-tab="doctors"><i class="fa-solid fa-user-doctor nav-icon"></i><span class="nav-label">Doctors</span><span class="nav-badge green" id="doctorsBadge">85</span></a></li>
-                    <li class="nav-item"><a href="#appointments" class="nav-link" data-tab="appointments"><i class="fa-solid fa-calendar-check nav-icon"></i><span class="nav-label">Appointments</span><span class="nav-badge amber" id="apptsNavBadge">42</span></a></li>
-                    <li class="nav-item"><a href="#pharmacy" class="nav-link" data-tab="pharmacy"><i class="fa-solid fa-pills nav-icon"></i><span class="nav-label">Pharmacy</span></a></li>
-                    <li class="nav-item"><a href="#laboratory" class="nav-link" data-tab="laboratory"><i class="fa-solid fa-flask-vial nav-icon"></i><span class="nav-label">Laboratory</span></a></li>
-                    <li class="nav-item"><a href="#billing" class="nav-link" data-tab="billing"><i class="fa-solid fa-file-invoice-dollar nav-icon"></i><span class="nav-label">Billing</span></a></li>
-                </ul>
+                <!-- MAIN -->
+                <div class="nav-section-title">Main</div>
+                <div class="nav-item active" data-tab="overview">
+                    <span class="nav-icon"><i data-lucide="layout-dashboard"></i></span>
+                    <span>Overview</span>
+                </div>
+
+                <!-- CLINICAL -->
+                <div class="nav-section-title">Clinical Care</div>
+                <div class="nav-item" data-tab="patients">
+                    <span class="nav-icon"><i data-lucide="users"></i></span>
+                    <span>Patients</span>
+                </div>
+                <div class="nav-item" data-tab="doctors">
+                    <span class="nav-icon"><i data-lucide="stethoscope"></i></span>
+                    <span>Doctors</span>
+                </div>
+                <div class="nav-item" data-tab="departments">
+                    <span class="nav-icon"><i data-lucide="building-2"></i></span>
+                    <span>Departments</span>
+                </div>
+                <div class="nav-item" data-tab="appointments">
+                    <span class="nav-icon"><i data-lucide="calendar"></i></span>
+                    <span>Appointments</span>
+                </div>
+                <div class="nav-item" data-tab="medical-records">
+                    <span class="nav-icon"><i data-lucide="clipboard-list"></i></span>
+                    <span>Medical Records</span>
+                </div>
+
+                <!-- PHARMACY & LAB -->
+                <div class="nav-section-title">Pharmacy & Lab</div>
+                <div class="nav-item" data-tab="prescriptions">
+                    <span class="nav-icon"><i data-lucide="clipboard-pen"></i></span>
+                    <span>Prescriptions</span>
+                </div>
+                <div class="nav-item" data-tab="medicines">
+                    <span class="nav-icon"><i data-lucide="pill"></i></span>
+                    <span>Medicines</span>
+                </div>
+                <div class="nav-item" data-tab="lab-tests">
+                    <span class="nav-icon"><i data-lucide="flask-conical"></i></span>
+                    <span>Lab Tests</span>
+                </div>
+
+                <!-- INPATIENT -->
+                <div class="nav-section-title">Facilities</div>
+                <div class="nav-item" data-tab="rooms-admissions">
+                    <span class="nav-icon"><i data-lucide="bed"></i></span>
+                    <span>Rooms & Admissions</span>
+                </div>
+
+                <!-- FINANCIAL -->
+                <div class="nav-section-title">Financial Services</div>
+                <div class="nav-item" data-tab="billing">
+                    <span class="nav-icon"><i data-lucide="receipt"></i></span>
+                    <span>Billing</span>
+                </div>
+                <div class="nav-item" data-tab="payments">
+                    <span class="nav-icon"><i data-lucide="credit-card"></i></span>
+                    <span>Payments</span>
+                </div>
+                <div class="nav-item" data-tab="insurance">
+                    <span class="nav-icon"><i data-lucide="shield-plus"></i></span>
+                    <span>Insurance</span>
+                </div>
+
+                <!-- ADMINISTRATION & REPORTS -->
+                <div class="nav-section-title">Administration</div>
+                <div class="nav-item" data-tab="staff">
+                    <span class="nav-icon"><i data-lucide="user-cog"></i></span>
+                    <span>Staff</span>
+                </div>
+                <div class="nav-item" data-tab="user-accounts">
+                    <span class="nav-icon"><i data-lucide="key-round"></i></span>
+                    <span>User Accounts</span>
+                </div>
+                <div class="nav-item" data-tab="reports">
+                    <span class="nav-icon"><i data-lucide="bar-chart-3"></i></span>
+                    <span>Reports</span>
+                </div>
+                <div class="nav-item" data-tab="settings">
+                    <span class="nav-icon"><i data-lucide="settings"></i></span>
+                    <span>Settings</span>
+                </div>
             </nav>
 
-            <div class="sidebar-footer-card">
-                <div class="emergency-badge"><i class="fa-solid fa-truck-medical"></i> 24/7 Helpline</div>
-                <p class="helpline-num">Emergency: <strong>+1 (800) 911-CARE</strong></p>
+            <div class="sidebar-footer">
+                <div class="user-badge-card">
+                    <div class="user-avatar" id="sidebar-user-avatar">AD</div>
+                    <div class="user-info">
+                        <div class="user-name" id="sidebar-user-name">Administrator</div>
+                        <div class="user-role" id="sidebar-user-role">Operations Lead</div>
+                    </div>
+                    <button class="btn-sidebar-logout" id="sidebar-logout-btn" title="Sign Out">
+                        <i data-lucide="log-out"></i>
+                    </button>
+                </div>
             </div>
         </aside>
 
-        <!-- MAIN WRAPPER -->
-        <div class="main-wrapper">
-            <header class="top-nav">
-                <div class="top-nav-left">
-                    <button class="hamburger-btn" id="mobileMenuBtn"><i class="fa-solid fa-bars"></i></button>
-                    <div>
-                        <h1 class="page-title" id="pageTitle">Hospital Overview</h1>
-                        <span class="live-clock" id="liveClock"><i class="fa-regular fa-clock"></i> Oct 3, 2026</span>
+        <!-- Main Workspace Shell -->
+        <main class="app-main">
+            <!-- Top Header Bar -->
+            <header class="app-header">
+                <div class="header-left">
+                    <button class="btn-mobile-toggle" id="mobile-menu-toggle-btn" aria-label="Toggle navigation menu">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="page-title-group">
+                        <div class="breadcrumbs" id="current-breadcrumbs">Dashboard / Overview</div>
+                        <h1 class="page-title" id="current-page-title">Hospital Operations Overview</h1>
                     </div>
                 </div>
 
-                <div class="search-box-wrap">
-                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
-                    <input type="text" id="globalSearchInput" class="search-input" placeholder="Search patients, doctors... (Press '/' to focus)">
-                </div>
+                <div class="header-right">
+                    <!-- Live Backend Status Pill -->
+                    <div class="backend-status-pill" id="backend-status-pill" title="Checking Spring Boot REST API...">
+                        <span class="pulse-dot"></span>
+                        <span id="backend-status-label">Probing API...</span>
+                    </div>
 
-                <div class="top-nav-right">
-                    <!-- Backend Connection Status Indicator -->
-                    <span class="api-status-tag offline" id="apiStatusTag" title="Connecting to Spring Boot REST API (http://localhost:8080)">
-                        <i class="fa-solid fa-plug"></i> <span id="apiStatusText">Backend: Offline</span>
-                    </span>
+                    <!-- Global Patient Quick Search -->
+                    <div class="header-search">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="global-search-input" placeholder="Jump to patient (press Enter)...">
+                    </div>
 
-                    <button class="icon-btn" id="themeToggleBtn" title="Toggle Theme"><i class="fa-solid fa-moon" id="themeIcon"></i></button>
-
-                    <button class="btn btn-primary" id="btnOpenNewApptModal"><i class="fa-solid fa-plus"></i> <span>New Appointment</span></button>
-
-                    <div class="admin-profile-card">
-                        <div class="admin-avatar-icon"><i class="fa-solid fa-user-doctor"></i></div>
-                        <div class="admin-info">
-                            <span class="admin-name">Dr. Alex Morgan</span>
-                            <span class="admin-role">Chief Administrator</span>
-                        </div>
+                    <!-- Header Icons -->
+                    <div class="header-actions">
+                        <button class="icon-btn" id="theme-toggle-top-btn" title="Toggle Theme" aria-label="Toggle Theme">
+                            <i data-lucide="moon"></i>
+                        </button>
+                        <button class="icon-btn" id="notifications-btn" title="System Notifications" aria-label="System Notifications">
+                            <i data-lucide="bell"></i>
+                            <span class="icon-badge"></span>
+                        </button>
                     </div>
                 </div>
             </header>
 
-            <main class="content-body">
-                <div class="tab-view active" id="view-dashboard">
-                    <section class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-card-top"><div class="stat-icon-wrapper bg-soft-blue"><i class="fa-solid fa-user-injured"></i></div><div class="stat-trend trend-up">+12.5%</div></div>
-                            <span class="stat-label">Total Patients</span>
-                            <h2 class="stat-value" id="statPatients">1,250</h2>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-top"><div class="stat-icon-wrapper bg-soft-indigo"><i class="fa-solid fa-user-doctor"></i></div><div class="stat-trend trend-up">+4 New</div></div>
-                            <span class="stat-label">Doctors</span>
-                            <h2 class="stat-value" id="statDoctors">85</h2>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-top"><div class="stat-icon-wrapper bg-soft-teal"><i class="fa-solid fa-calendar-check"></i></div><div class="stat-trend trend-neutral">Today</div></div>
-                            <span class="stat-label">Today's Appointments</span>
-                            <h2 class="stat-value" id="statAppts">42</h2>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-card-top"><div class="stat-icon-wrapper bg-soft-amber"><i class="fa-solid fa-bed-pulse"></i></div><div class="stat-trend">85% Occupied</div></div>
-                            <span class="stat-label">Available Rooms</span>
-                            <h2 class="stat-value" id="statRooms">18</h2>
-                        </div>
-                    </section>
-
-                    <div class="dashboard-main-grid">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title"><i class="fa-solid fa-chart-line text-primary"></i> Revenue Overview</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-wrapper"><canvas id="revenueChart"></canvas></div>
-                            </div>
-                        </div>
-
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title"><i class="fa-solid fa-user-doctor text-indigo"></i> Doctor Availability</h3>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="doctor-list" id="doctorList">
-                                    <div class="doctor-item">
-                                        <div class="doc-avatar-circle bg-blue-sub">SJ</div>
-                                        <div class="doctor-details"><h4 class="doc-name">Dr. Sarah Jenkins</h4><span class="doc-dept">Cardiology</span></div>
-                                        <div class="doctor-status-badge green">On Duty</div>
-                                    </div>
-                                    <div class="doctor-item">
-                                        <div class="doc-avatar-circle bg-blue-sub">MC</div>
-                                        <div class="doctor-details"><h4 class="doc-name">Dr. Michael Chen</h4><span class="doc-dept">Neurology</span></div>
-                                        <div class="doctor-status-badge green">On Duty</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <section>
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title"><i class="fa-solid fa-calendar-days text-primary"></i> Recent Appointments</h3>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="table-responsive">
-                                    <table class="data-table">
-                                        <thead>
-                                            <tr><th>Patient Name</th><th>Doctor</th><th>Date & Time</th><th>Status</th></tr>
-                                        </thead>
-                                        <tbody id="appointmentsTbody">
-                                            <tr>
-                                                <td>Eleanor Brooks</td>
-                                                <td>Dr. Sarah Jenkins</td>
-                                                <td>Oct 03, 2026 - 09:30 AM</td>
-                                                <td><span class="status-pill status-completed">Completed</span></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+            <!-- Dynamic Workspace Content View -->
+            <div class="app-content">
+                <div class="tab-pane active" id="tab-overview">
+                    <!-- Dashboard renders here -->
                 </div>
-            </main>
-        </div>
-    </div>
-
-    <!-- MODAL: NEW APPOINTMENT -->
-    <div class="modal-backdrop" id="newApptModal">
-        <div class="modal-dialog">
-            <div class="modal-header">
-                <h3>Schedule New Appointment</h3>
-                <button class="btn-close-modal" id="closeNewApptModal"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <form id="newApptForm">
-                <div class="modal-body">
-                    <div class="form-row">
-                        <div class="form-group col-6"><label>Patient ID *</label><input type="number" id="modalPatientId" class="form-control" value="1" required></div>
-                        <div class="form-group col-6"><label>Doctor ID *</label><input type="number" id="modalDoctorId" class="form-control" value="1" required></div>
-                    </div>
-                    <div class="form-row mt-3">
-                        <div class="form-group col-6"><label>Date *</label><input type="date" id="modalDate" class="form-control" required></div>
-                        <div class="form-group col-6"><label>Time Slot *</label><input type="time" id="modalTime" class="form-control" value="10:30" required></div>
-                    </div>
-                    <div class="form-group mt-3"><label>Reason</label><input type="text" id="modalReason" class="form-control" placeholder="Consultation"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-outline" id="btnCancelModal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Book Appointment</button>
-                </div>
-            </form>
-        </div>
+        </main>
     </div>
 
-    <div class="toast-container" id="toastContainer"></div>
-
-    <script>
-        const API_BASE_URL = 'http://localhost:8080/api';
-
-        document.addEventListener('DOMContentLoaded', () => {
-            checkBackendHealth();
-
-            // Revenue Chart
-            const ctx = document.getElementById('revenueChart');
-            if (ctx) {
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-                        datasets: [{ label: 'Revenue ($)', data: [120000, 135000, 128000, 142000, 160000, 155000, 172000, 184250, 190000, 195000], borderColor: '#2563eb', tension: 0.4 }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false }
-                });
-            }
-
-            // New Appointment Form POST Integration
-            document.getElementById('btnOpenNewApptModal').onclick = () => {
-                document.getElementById('newApptModal').classList.add('show');
-                document.getElementById('modalDate').value = new Date().toISOString().split('T')[0];
-            };
-            document.getElementById('closeNewApptModal').onclick = () => document.getElementById('newApptModal').classList.remove('show');
-            document.getElementById('btnCancelModal').onclick = () => document.getElementById('newApptModal').classList.remove('show');
-
-            document.getElementById('newApptForm').onsubmit = (e) => {
-                e.preventDefault();
-                const patientId = document.getElementById('modalPatientId').value;
-                const doctorId = document.getElementById('modalDoctorId').value;
-                const apptDate = document.getElementById('modalDate').value;
-                const apptTime = document.getElementById('modalTime').value + ':00';
-                const reason = document.getElementById('modalReason').value || 'General Consultation';
-
-                const apptPayload = { patientId: parseInt(patientId), doctorId: parseInt(doctorId), apptDate, apptTime, reason, status: 'SCHEDULED' };
-
-                fetch(`${API_BASE_URL}/appointments`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(apptPayload)
-                })
-                .then(res => {
-                    if (!res.ok) return res.json().then(err => { throw new Error(err.message || 'Failed to create appointment'); });
-                    return res.json();
-                })
-                .then(data => {
-                    showToast(`Appointment #${data.apptId} created successfully!`, 'success');
-                    document.getElementById('newApptModal').classList.remove('show');
-                    fetchLiveAppointments();
-                })
-                .catch(err => showToast(err.message, 'danger'));
-            };
-        });
-
-        // Health check & Fetch live data
-        function checkBackendHealth() {
-            fetch(`${API_BASE_URL}/patients`)
-                .then(res => {
-                    if (res.ok) {
-                        document.getElementById('apiStatusTag').className = 'api-status-tag online';
-                        document.getElementById('apiStatusText').textContent = 'Backend: Online';
-                        fetchLiveAppointments();
-                        fetchLiveDoctors();
-                    }
-                })
-                .catch(() => {
-                    document.getElementById('apiStatusTag').className = 'api-status-tag offline';
-                    document.getElementById('apiStatusText').textContent = 'Backend: Offline (Local Mode)';
-                });
-        }
-
-        function fetchLiveAppointments() {
-            fetch(`${API_BASE_URL}/appointments`)
-                .then(res => res.json())
-                .then(data => {
-                    const tbody = document.getElementById('appointmentsTbody');
-                    if (data && data.length > 0) {
-                        tbody.innerHTML = '';
-                        data.forEach(a => {
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `<td>${a.patientName || 'Patient #' + a.patientId}</td><td>${a.doctorName || 'Doctor #' + a.doctorId}</td><td>${a.apptDate} ${a.apptTime}</td><td><span class="status-pill status-scheduled">${a.status}</span></td>`;
-                            tbody.appendChild(tr);
-                        });
-                        document.getElementById('statAppts').textContent = data.length;
-                    }
-                });
-        }
-
-        function fetchLiveDoctors() {
-            fetch(`${API_BASE_URL}/doctors`)
-                .then(res => res.json())
-                .then(doctors => {
-                    if (doctors && doctors.length > 0) {
-                        document.getElementById('statDoctors').textContent = doctors.length;
-                    }
-                });
-        }
-
-        function showToast(msg, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const t = document.createElement('div');
-            t.className = `toast-msg ${type}`;
-            t.innerHTML = `<span>${msg}</span>`;
-            container.appendChild(t);
-            setTimeout(() => t.remove(), 3500);
-        }
-    </script>
+    <!-- Application Script Entry Point (ES Module) -->
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
